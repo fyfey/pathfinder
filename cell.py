@@ -111,7 +111,6 @@ class Cell():
                 else:
                         bgcolor = CELL
                 x, y = self.getCoords()
-                print self.getCoords()
                 self.clipRect = pygame.Rect(x, y, self.width, self.height)
                 self.drawRect = pygame.Rect(x + 1, y + 1, self.width - 2, self.height - 2)
                 pygame.draw.rect(self.grid.surface, bgcolor, self.drawRect, 0)
