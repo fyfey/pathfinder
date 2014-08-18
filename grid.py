@@ -11,32 +11,28 @@ class Grid():
         START = 1
         TARGET = 2
         WALL = 3
-        ASCII_START = "S"
-        ASCII_TARGET = "F"
-        ASCII_WALL = "#"
-        ASCII_BLANK = "."
 
         def __init__(self, _w, _h, _cw, _ch, surface, game):
-                # inital setup
-                self.game = game
-                self.width = _w
-                self.height = _h
-                self.cell_width = _cw
-                self.cell_height = _ch
-                self.cells = []
-                self.surface = surface
-                self.clickAction = 0
-                self.startSet = 0 # Bool - is start set?
-                self.targetSet = 0 # Bool - is target set?
-                self.target = 0 # Our target cell
-                self.start = 0 # Our Start cell
+            # inital setup
+            self.game = game
+            self.width = _w
+            self.height = _h
+            self.cell_width = _cw
+            self.cell_height = _ch
+            self.cells = []
+            self.surface = surface
+            self.clickAction = 0
+            self.startSet = 0 # Bool - is start set?
+            self.targetSet = 0 # Bool - is target set?
+            self.target = 0 # Our target cell
+            self.start = 0 # Our Start cell
 
-                print "Grid width: %d" % self.width
-                print "Grid height: %d" % self.height
+            print "Grid width: %d" % self.width
+            print "Grid height: %d" % self.height
 
-                # Create cells
-                for i in range(1, (_w*_h)+1):
-                    self.cells.append(Cell(self.indexToCoord(i), self, self.game))
+            # Create cells
+            for i in range(1, (_w*_h)+1):
+                self.cells.append(Cell(self.indexToCoord(i), self, self.game))
 
         def cell(self, _x, _y):
                 return self.cells[self.coordToIndex(_x, _y)]
@@ -121,29 +117,9 @@ class Grid():
             for cell in self.cells:
                 cell.draw()
 
-        def getAscii(self, cell):
-            if cell.start:
-                char = self.ASCII_START
-            elif cell.wall:
-                char = self.ASCII_WALL
-            elif cell.target:
-                char = self.ASCII_TARGET
-            else:
-                char = self.ASCII_BLANK
-
-            return char
-
         def getHash(self):
             string = ""
             for cell in self.cells:
                 string += self.getAscii(cell)
             return hashlib.md5(string).hexdigest()
 
-        def export(self):
-            export = ""
-            for i in range(self.height, 0, -1):
-                for j in range(1, self.width + 1):
-                    cell = self.cell(j, i)
-                    export += self.getAscii(cell)
-                export += "\n"
-            return export
