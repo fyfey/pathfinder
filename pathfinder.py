@@ -1,5 +1,5 @@
 from __future__ import division
-import pygame, random, time, sys, math, decimal, gtk
+import pygame, random, sys, math, decimal
 from config import Config
 from grid import Grid
 from pygame.locals import *
@@ -11,38 +11,6 @@ pygame.init()
 # Ctrl+Click to highlight, Alt+Click to toggle text
 
 DKGREY    = (50,50,50)
-
-import gtk
-def responseToDialog(entry, dialog, response):
-    dialog.response(response)
-def getText():
-    #base this on a message dialog
-    dialog = gtk.MessageDialog(
-        None,
-        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-        gtk.MESSAGE_QUESTION,
-        gtk.BUTTONS_OK,
-        None)
-    dialog.set_markup('Please enter your <b>name</b>:')
-    #create the text input field
-    entry = gtk.Entry()
-    #allow the user to press enter to do ok
-    entry.connect("activate", responseToDialog, dialog, gtk.RESPONSE_OK)
-    #create a horizontal box to pack the entry and a label
-    hbox = gtk.HBox()
-    hbox.pack_start(gtk.Label("Name:"), False, 5, 5)
-    hbox.pack_end(entry)
-    #some secondary text
-    dialog.format_secondary_markup("This will be used for <i>identification</i> purposes")
-    #add it and show it
-    dialog.vbox.pack_end(hbox, True, True, 0)
-    dialog.show_all()
-    #go go go
-    dialog.run()
-    text = entry.get_text()
-    dialog.hide()
-    dialog.destroy()
-    return text
 
 class Game():
 
@@ -63,10 +31,6 @@ class Game():
                 self.fpsClock = pygame.time.Clock()
                 self.fps = config.fps
 
-                # self.solving = 0
-                # self.openList = []
-                # self.closedList = []
-
                 print 'filling surface'
                 self.surface.fill(DKGREY)
 
@@ -79,7 +43,6 @@ class Game():
                 self.reset()
         
         def setupCell(self, cell, char):
-                print char
                 if char == "S":
                     cell.setStart()
                     self.grid.startSet = 1
@@ -193,8 +156,10 @@ class Game():
 
         def save(self):
             map = self.grid.export()
-            f = open("%s.map" % str(int(math.ceil(time.time()))), 'w')
+            t = self.grid.getHash()
+            f = open("%s.map" % t, 'w')
             f.write(map)
+            print "Saved map - %s.map" % t
 
         def load(self, filename):
             f = open(filename, 'r')
@@ -207,47 +172,10 @@ class Game():
             return (list(reversed(grid)))
 
         def nextStep(self):
-                print self.openList
                 self.openList.sort(key=lambda x: x.f, reverse=True)
                 cell = self.openList.pop()
                 cell.getNeighbours()
                 return cell
-
-                '''_cell.getNeighbours()
-                # Step 1 - put start in closed list and get adjacent
-                for cell in _cell.neighbours:
-                        self.openList.append(cell)
-
-                for cell in self.openList:
-                        cell.g = self.solving
-                        cell.h = cell.calcH()
-                        cell.f = cell.calcF()
-                        cell.updateText()
-                        cell.drawText = 1
-                        cell.highlight = 1
-                        cell.draw()
-
-
-                print cell.f
-                if cell == self.grid.target:
-                        print 'found target!'
-                        self.solving = 0
-                        return
-                self.closedList.append(cell)
-
-                self.nextStep(cell)
-        #walls = ((3,9),(7,9),(5,7), (3,6),(7,6),(3,5),(4,5),(5,5),(6,5),(7,5))
-        #for coords in walls:
-                #x, y = coords
-                #theGrid.cell(x, y).wall = 1
-
-        #theGrid.cell(1, 1).start = 1    
-        #theGrid.cell(10,10).target = 1
-
-        #for x in theGrid.cell(5, 7).neighbours:
-                #x.highlight = 1
-                #x.draw()       '''
-
 
 def main():
     game = Game()

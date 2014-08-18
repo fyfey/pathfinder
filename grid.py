@@ -1,7 +1,7 @@
 #!/usr/env python
 
 from __future__ import division
-import math, pygame
+import math, pygame, hashlib
 from cell import Cell
 from pygame.locals import *
 
@@ -121,19 +121,29 @@ class Grid():
             for cell in self.cells:
                 cell.draw()
 
+        def getAscii(self, cell):
+            if cell.start:
+                char = self.ASCII_START
+            elif cell.wall:
+                char = self.ASCII_WALL
+            elif cell.target:
+                char = self.ASCII_TARGET
+            else:
+                char = self.ASCII_BLANK
+
+            return char
+
+        def getHash(self):
+            string = ""
+            for cell in self.cells:
+                string += self.getAscii(cell)
+            return hashlib.md5(string).hexdigest()
+
         def export(self):
             export = ""
             for i in range(self.height, 0, -1):
                 for j in range(1, self.width + 1):
                     cell = self.cell(j, i)
-                    if cell.start:
-                        char = self.ASCII_START
-                    elif cell.wall:
-                        char = self.ASCII_WALL
-                    elif cell.target:
-                        char = self.ASCII_TARGET
-                    else:
-                        char = self.ASCII_BLANK
-                    export += char
+                    export += self.getAscii(cell)
                 export += "\n"
             return export
