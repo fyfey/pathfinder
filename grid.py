@@ -11,6 +11,10 @@ class Grid():
         START = 1
         TARGET = 2
         WALL = 3
+        ASCII_START = "S"
+        ASCII_TARGET = "F"
+        ASCII_WALL = "#"
+        ASCII_BLANK = "."
 
         def __init__(self, _w, _h, _cw, _ch, surface, game):
                 # inital setup
@@ -116,3 +120,20 @@ class Grid():
         def draw(self):
             for cell in self.cells:
                 cell.draw()
+
+        def export(self):
+            export = ""
+            for i in range(self.height, 0, -1):
+                for j in range(1, self.width + 1):
+                    cell = self.cell(j, i)
+                    if cell.start:
+                        char = self.ASCII_START
+                    elif cell.wall:
+                        char = self.ASCII_WALL
+                    elif cell.target:
+                        char = self.ASCII_TARGET
+                    else:
+                        char = self.ASCII_BLANK
+                    export += char
+                export += "\n"
+            return export

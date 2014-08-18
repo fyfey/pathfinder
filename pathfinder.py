@@ -1,5 +1,5 @@
 from __future__ import division
-import pygame, random, time, sys, math, decimal
+import pygame, random, time, sys, math, decimal, gtk
 from config import Config
 from grid import Grid
 from pygame.locals import *
@@ -12,14 +12,49 @@ pygame.init()
 
 DKGREY    = (50,50,50)
 
+import gtk
+def responseToDialog(entry, dialog, response):
+    dialog.response(response)
+def getText():
+    #base this on a message dialog
+    dialog = gtk.MessageDialog(
+        None,
+        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+        gtk.MESSAGE_QUESTION,
+        gtk.BUTTONS_OK,
+        None)
+    dialog.set_markup('Please enter your <b>name</b>:')
+    #create the text input field
+    entry = gtk.Entry()
+    #allow the user to press enter to do ok
+    entry.connect("activate", responseToDialog, dialog, gtk.RESPONSE_OK)
+    #create a horizontal box to pack the entry and a label
+    hbox = gtk.HBox()
+    hbox.pack_start(gtk.Label("Name:"), False, 5, 5)
+    hbox.pack_end(entry)
+    #some secondary text
+    dialog.format_secondary_markup("This will be used for <i>identification</i> purposes")
+    #add it and show it
+    dialog.vbox.pack_end(hbox, True, True, 0)
+    dialog.show_all()
+    #go go go
+    dialog.run()
+    text = entry.get_text()
+    dialog.hide()
+    dialog.destroy()
+    return text
+
 class Game():
 
         def __init__(self):
-
                 config = Config()
                 config.load('config.yaml')
-
                 self.cellfont = pygame.font.SysFont('arial',10)
+
+                grid = False
+                if len(sys.argv) > 1:
+                    grid = self.load(sys.argv[1])
+                    config.grid_width, config.grid_height = (len(grid[0]), len(grid))
 
                 self.SCREENWIDTH, self.SCREENHEIGHT = (config.grid_width * config.cell_width, config.grid_height * config.cell_height)
                 self.surface = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))
@@ -28,14 +63,31 @@ class Game():
                 self.fpsClock = pygame.time.Clock()
                 self.fps = config.fps
 
-                self.solving = 0
-                self.openList = []
-                self.closedList = []
+                # self.solving = 0
+                # self.openList = []
+                # self.closedList = []
 
                 print 'filling surface'
                 self.surface.fill(DKGREY)
+
+                if grid:
+                    for i in range(0, len(grid)):
+                        for j in range(0, len(grid[i])):
+                            self.setupCell(self.grid.cell(j+1, i+1), grid[i][j])
+
                 print 'drawing grid'
-                self.grid.draw()
+                self.reset()
+        
+        def setupCell(self, cell, char):
+                print char
+                if char == "S":
+                    cell.setStart()
+                    self.grid.startSet = 1
+                elif char == "F":
+                    cell.setTarget()
+                    self.grid.targetSet = 1
+                elif char == "#":
+                    cell.wall = 1
 
         def reset(self):
                 keys = pygame.key.get_pressed()
@@ -70,6 +122,8 @@ class Game():
                                                     self.solve()
                                         if event.key == K_ESCAPE:
                                                 self.reset()
+                                        if event.key == K_s:
+                                                self.save()
 
                         pygame.display.update()
                         self.fpsClock.tick(self.fps)
@@ -137,7 +191,23 @@ class Game():
                 else:
                         print 'Error: I need a start and finish!'
 
+        def save(self):
+            map = self.grid.export()
+            f = open("%s.map" % str(int(math.ceil(time.time()))), 'w')
+            f.write(map)
+
+        def load(self, filename):
+            f = open(filename, 'r')
+            grid = []
+            for line in f:
+                a_line = []
+                for i in range(0, len(line)-1):
+                    a_line.append(line[i])
+                grid.append(a_line)
+            return (list(reversed(grid)))
+
         def nextStep(self):
+                print self.openList
                 self.openList.sort(key=lambda x: x.f, reverse=True)
                 cell = self.openList.pop()
                 cell.getNeighbours()
@@ -182,6 +252,7 @@ class Game():
 def main():
     game = Game()
     game.start()
+    gtk.main()
 
 if __name__ == '__main__':
     main()
