@@ -3,3 +3,5 @@ grid_height: 10
 cell_width:  50
 cell_height: 50
 fps:         30
+found_delay: 125
+search_delay: 200

@@ -27,9 +27,6 @@ class Grid():
             self.target = 0 # Our target cell
             self.start = 0 # Our Start cell
 
-            print "Grid width: %d" % self.width
-            print "Grid height: %d" % self.height
-
             # Create cells
             for i in range(1, (_w*_h)+1):
                 self.cells.append(Cell(self.indexToCoord(i), self, self.game))
@@ -110,7 +107,6 @@ class Grid():
                 a = math.ceil(index/self.width)
                 y = int(a)
                 x = int(index - ((y-1) * self.width))
-                print (x, y)
                 return (x, y)
 
         def draw(self):

@@ -107,7 +107,7 @@ class Game():
                             cell.path=1
                             cell.highlight=0
                             cell.draw()
-                            pygame.time.delay(125)
+                            pygame.time.delay(self.config.found_delay)
                             pygame.display.update()
                         break
 
@@ -129,7 +129,7 @@ class Game():
                             cell.draw()
                             found = 1
                     if found:
-                        pygame.time.delay(300)
+                        pygame.time.delay(self.config.search_delay)
                     print len(self.openList)
                     pygame.display.update()
                     current.current = 0
