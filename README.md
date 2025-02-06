@@ -16,9 +16,9 @@ python pathfinder.py
 * Click to place finish tile
 * Click to toggle walls
 
-`Space` Solve
-`Escape` Reset
-`Alt-Click` Toggle tile colour
-`Shift-Click` Toggle tile text
-`S` Save map Use terminal to enter filename (must have .map extension)
+`Space` Solve  
+`Escape` Reset  
+`Alt-Click` Toggle tile colour  
+`Shift-Click` Toggle tile text  
+`S` Save map Use terminal to enter filename (must have .map extension)  
 `L` Load map - Use terminal to choose map
