@@ -93,7 +93,7 @@ class Cell():
                         self.start = 0
                         self.target = 0
                 self.draw()
-                print 'toggleWall [%d, %d]' % (self.x, self.y)
+                print('toggleWall [%d, %d]' % (self.x, self.y))
 
         def draw(self):
                 if self.wall:

@@ -17,22 +17,22 @@ class File:
         self.files = glob.glob('./*.map')
         i = 1
         for file in self.files:
-            print "%d) %s" % (i, file)
+            print("%d) %s" % (i, file))
             i += 1
         if not self.files:
-            print "No maps found!"
+            print("No maps found!")
             return False
         while True:
             try:
-                number = int(raw_input("Enter a number (0 to cancel): "))
+                number = int(input("Enter a number (0 to cancel): "))
                 number -= 1
                 if number == -1:
-                    print "Load cancelled"
+                    print("Load cancelled")
                     return False
                 filename = self.files[int(number)]
                 break
             except (IndexError, ValueError):
-                print "Please enter a valid entry"
+                print("Please enter a valid entry")
         f = open(filename, 'r')
         grid = []
         for line in f:
@@ -43,7 +43,7 @@ class File:
         return (list(reversed(grid)))
 
     def save(self):
-        name = raw_input("Enter a map name: ")
+        name = input("Enter a map name: ")
         export = ""
         for i in range(self.grid.height, 0, -1):
             for j in range(1, self.grid.width + 1):
@@ -52,7 +52,7 @@ class File:
             export += "\n"
         f = open("%s.map" % name, 'w')
         f.write(export)
-        print "Saved map - %s.map" % name
+        print("Saved map - %s.map" % name)
 
     def getAscii(self, cell):
         if cell.start:

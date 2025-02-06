@@ -53,10 +53,10 @@ class Game():
         self.grid.draw()
 
     def start(self):
-            print 'starting game loop'
+            print('starting game loop')
             while True:
                 for event in pygame.event.get(QUIT): # get all the QUIT events
-                    print 'quit'
+                    print('quit')
                     pygame.quit()
                     sys.exit()
                 for event in pygame.event.get():
@@ -79,7 +79,7 @@ class Game():
 
     def solve(self):
             if self.grid.startSet and self.grid.targetSet:
-                print 'Solving'
+                print('Solving')
                 self.reset()
                 # Reset lists
                 self.openList = []
@@ -93,7 +93,7 @@ class Game():
                     current.current = 1
                     current.draw()
                     if current == self.grid.target:
-                        print 'found path!'
+                        print('found path!')
                         solving = 0
                         cell = self.grid.target
                         current.current = 0
@@ -116,7 +116,7 @@ class Game():
                     found = 0
                     for cell in current.neighbours:
                         if cell in self.closedList:
-                            print 'closed'
+                            print('closed')
                             continue
                         if cell not in self.openList or current.g + 1 <= cell.parent.g + 2:
                             cell.highlight = 1
@@ -130,15 +130,15 @@ class Game():
                             found = 1
                     if found:
                         pygame.time.delay(self.config.search_delay)
-                    print len(self.openList)
+                    print(len(self.openList))
                     pygame.display.update()
                     current.current = 0
                     current.draw()
                 else:
-                    print 'Failure'
+                    print('Failure')
                 self.solving = 0
             else:
-                print 'Error: I need a start and finish!'
+                print('Error: I need a start and finish!')
 
     def save(self):
         self.file.save()

@@ -38,31 +38,31 @@ class Grid():
                 return ((_y-1)*self.width)+_x - 1
         def updateClickAction(self):
                 if not self.startSet:
-                        print 'set START'
+                        print('set START')
                         self.clickAction = Grid.START
                         self.startSet = 1
                 elif not self.targetSet:
-                        print 'set TARGET'
+                        print('set TARGET')
                         self.clickAction = Grid.TARGET
                         self.targetSet = 1
                 else:
-                        print 'set WALL'
+                        print('set WALL')
                         self.clickAction = Grid.WALL
         def handleClick(self, event):
-                print 'handClick'
+                print('handClick')
                 pos = pygame.mouse.get_pos()
                 cell = [c for c in self.cells if c.clipRect.collidepoint(pos)]
                 cell = cell[0]
                 keys = pygame.key.get_pressed()
                 if keys[K_LALT]:
-                        print 'LEFT ALT'
+                        print('LEFT ALT')
                         if cell.drawText:
                                 cell.drawText = 0
                         else:
                                 cell.drawText = 1
                         cell.draw()
                 elif keys[K_LCTRL]:
-                        print 'CONTROL'
+                        print('CONTROL')
                         if not cell.start and not cell.target and not cell.wall:
                                 if cell.highlight:
                                         cell.highlight = 0
@@ -72,19 +72,19 @@ class Grid():
                 else:
                         self.updateClickAction()
                         if self.clickAction == Grid.START:
-                                print 'START'
+                                print('START')
                                 if cell.target:
                                         self.targetSet = 0
                                 cell.setStart()
                         elif self.clickAction == Grid.TARGET:
-                                print 'TARGET'
+                                print('TARGET')
                                 if cell.start:
                                         self.startSet = 0
                                 cell.setTarget()
                         elif self.clickAction == Grid.WALL:
-                                print 'WALL'
+                                print('WALL')
                                 if cell.start:
-                                        print 'cell is start'
+                                        print('cell is start')
                                         cell.wall = 0
                                         cell.start = 0
                                         self.startSet = 0
@@ -92,7 +92,7 @@ class Grid():
                                         cell.draw()
                                         return
                                 if cell.target:
-                                        print 'cell is target'
+                                        print('cell is target')
                                         cell.wall = 0
                                         cell.target = 0
                                         self.targetSet = 0
@@ -100,7 +100,7 @@ class Grid():
                                         cell.draw()
                                         return
                                 if not (cell.target and cell.start):
-                                        print 'else'
+                                        print('else')
                                         cell.toggleWall()    
 
         def indexToCoord(self, index):
